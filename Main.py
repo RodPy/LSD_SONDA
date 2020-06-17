@@ -8,7 +8,7 @@ tiempo = 20.0
 
 def sql_connection():
     try:
-        conn = sqlite3.connect('Sonda_P4.db')
+        conn = sqlite3.connect('Sonda_Test.db')  # Nombre de la Base de datos 
         return conn
     except Error:
         print(Error)
@@ -20,6 +20,7 @@ def sql_table(conn):
 
 def sql_insert(conn,lecturas):
     cur=conn.cursor()
+    #Se crea la table lecturas
     cur.execute("INSERT INTO lecturas(datatime,Tempertatura,pH,DO,CE,TDS,S,OPR) VALUES(datetime('now','localtime'),?,?,?,?,?,?,?)",lecturas)
     conn.commit()
     
@@ -47,31 +48,19 @@ while True:
     CEt= i2c.leerSensores("R","CE")
     print (CEt) 
     print ("DATOS RECOLECTADOS : ")
-    #
-   ## CEt=[1, 1, 1, 1, 1,1,1,1,1,1,1]
-    CE= CEt[0:4]
-    ##CE=1
-    TDS= CEt[5]
-    S= CEt[7:11]
+
+    ce= CEt.split(",")
+    CE=ce[1]
+    TDS= ce[2]
+    S= cet[3]
     
     SEN= {"Temp":temp,"DO":DO,"OPR":OPR,"PH":PH, "CE":CE,"TDS": TDS, "S": S}
     print (SEN)
     lect=(temp,PH,DO,CE,TDS,S,OPR)
-   ## print (temp)
-   ## aux=(temp,temp,temp,temp,temp)
-    ##print (reading_time)
-    ##print ("CE: "+ str(CE[0:4]))
-    ##print ("TDS: "+ str(CE[5]))
-    ##print ("S: "+ str(CE[7:11]))
-
 
 
     ## Almacenamiento en BD
 
-  ##  c.execute("INSERT INTO lecturas VALUES ( 1,datetime('now','localtime'), temp, PH, CE, TDS,S)")
-
-#    c.execute('''INSERT INTO lecturasPy(datatime,Tempertatura,pH,CE,TDS,S) VALUES(datetime('now','localtime'),?,?,?,?,?)''', aux)
-  #  conn.commit()
     sql_insert(conn,lect)
     print ("Carga Exitosa, timepo de espera: " + str(tiempo) +" [s]. ")
     time.sleep(tiempo)
