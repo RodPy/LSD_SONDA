@@ -65,7 +65,7 @@ while True:
     ourClient.publish("sonda/raspberry/opr", OPR)
     ourClient.publish("sonda/raspberry/ce", CE)
     ourClient.publish("sonda/raspberry/tds", TDS)
-    ourClient.publish("sonda/raspberry/s", S
+    ourClient.publish("sonda/raspberry/s", S)
 
     ## Almacenamiento en BD
 
