@@ -70,6 +70,6 @@ while True:
     ## Almacenamiento en BD
 
    # sql_insert(conn,lect)
-    print ("Carga Exitosa, timepo de espera: " + str(tiempo) +" [s]. ")
+    print("Carga Exitosa, timepo de espera: " + str(tiempo) +" [s]. ")
     time.sleep(tiempo)
 
