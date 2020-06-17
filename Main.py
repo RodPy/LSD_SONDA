@@ -50,9 +50,9 @@ while True:
     print ("DATOS RECOLECTADOS : ")
 
     ce= CEt.split(",")
-    CE=ce[1]
-    TDS= ce[2]
-    S= cet[3]
+    CE=ce[0]
+    TDS= ce[1]
+    S= cet[2]
     
     SEN= {"Temp":temp,"DO":DO,"OPR":OPR,"PH":PH, "CE":CE,"TDS": TDS, "S": S}
     print (SEN)
