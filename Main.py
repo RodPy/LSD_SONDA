@@ -52,7 +52,7 @@ while True:
     ce= CEt.split(",")
     CE=ce[0]
     TDS= ce[1]
-    S= cet[2]
+    S= ce[2]
     
     SEN= {"Temp":temp,"DO":DO,"OPR":OPR,"PH":PH, "CE":CE,"TDS": TDS, "S": S}
     print (SEN)
@@ -61,7 +61,7 @@ while True:
 
     ## Almacenamiento en BD
 
-    sql_insert(conn,lect)
+   # sql_insert(conn,lect)
     print ("Carga Exitosa, timepo de espera: " + str(tiempo) +" [s]. ")
     time.sleep(tiempo)
 
