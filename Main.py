@@ -1,8 +1,10 @@
 import sqlite3
 import time
+import mqttConf
 from Sensores import sensor_temperatura
 from Sensores import i2c
 from sqlite3 import Error
+
 
 tiempo = 20.0
 
@@ -57,7 +59,13 @@ while True:
     SEN= {"Temp":temp,"DO":DO,"OPR":OPR,"PH":PH, "CE":CE,"TDS": TDS, "S": S}
     print (SEN)
     lect=(temp,PH,DO,CE,TDS,S,OPR)
-
+    ourClient.publish("sonda/raspberry/ph", PH)
+    ourClient.publish("sonda/raspberry/temp", temp)
+    ourClient.publish("sonda/raspberry/do", DO)
+    ourClient.publish("sonda/raspberry/opr", OPR)
+    ourClient.publish("sonda/raspberry/ce", CE)
+    ourClient.publish("sonda/raspberry/tds", TDS)
+    ourClient.publish("sonda/raspberry/s", S
 
     ## Almacenamiento en BD
 
