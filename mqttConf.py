@@ -16,11 +16,9 @@ def messageFunction (client, userdata, message):
 
  
 
- 
-
 ourClient = mqtt.Client("Sonda_mqtt") # Create a MQTT client object
 
-ourClient.connect("192.168.0.14", 1883) # Connect to the test MQTT broker
+ourClient.connect("192.168.20.164", 1883) # Connect to the test MQTT broker
 
 #ourClient.subscribe("sonda/raspberry") # Subscribe to the topic 
 
@@ -31,7 +29,9 @@ ourClient.subscribe("sonda/raspberry/opr")
 ourClient.subscribe("sonda/raspberry/ce")
 ourClient.subscribe("sonda/raspberry/tds")
 ourClient.subscribe("sonda/raspberry/s")
+ourClient.subscribe("sonda/raspverry/db")
 ourClient.on_message = messageFunction # Attach the messageFunction to subscription
+
 
 ourClient.loop_start() # Start the MQTT client
 

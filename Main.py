@@ -6,7 +6,7 @@ from Sensores import i2c
 from sqlite3 import Error
 
 
-tiempo = 20.0
+tiempo = 10.0
 
 def sql_connection():
     try:
