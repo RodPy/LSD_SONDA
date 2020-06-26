@@ -20,7 +20,7 @@ def messageFunction (client, userdata, message):
 
 ourClient = mqtt.Client("Sonda_mqtt") # Create a MQTT client object
 
-ourClient.connect("192.168.0.7", 1883) # Connect to the test MQTT broker
+ourClient.connect("192.168.0.14", 1883) # Connect to the test MQTT broker
 
 #ourClient.subscribe("sonda/raspberry") # Subscribe to the topic 
 
