@@ -86,7 +86,7 @@ class AtlasI2C:
         return i2c_devices
 
 ##dir= {"DO":97,"OPR":98,"PH":99, "CE":100}
-dir= {"DO":97,"OPR":99,"PH":99, "CE":100}
+dir= {"DO":97,"OPR":98,"PH":99, "CE":100}
 
 prom= 1
 
