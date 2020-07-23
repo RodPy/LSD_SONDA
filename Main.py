@@ -82,13 +82,20 @@ def muestreo(n,tiempo):
         SEN= {"Temp":temp,"DO":DO,"OPR":OPR,"PH":PH, "CE":CE,"TDS": TDS, "S": S}
         print (SEN)
         lect=(temp,PH,DO,CE,TDS,S,OPR)
-        mqttConf.ourClient.publish("sonda/raspberry/ph", PH)
-        mqttConf.ourClient.publish("sonda/raspberry/temp", temp)
-        mqttConf.ourClient.publish("sonda/raspberry/do", DO)
-        mqttConf.ourClient.publish("sonda/raspberry/opr", OPR)
-        mqttConf.ourClient.publish("sonda/raspberry/ce", CE)
-        mqttConf.ourClient.publish("sonda/raspberry/tds", TDS)
-        mqttConf.ourClient.publish("sonda/raspberry/s", S)
+        
+        client.publish("sensores",
+               json.dumps(
+                   {
+                       "pos": {"lat": 1, "lng": 1},
+                       "temp": temp,
+                       "ph": PH,
+                       "do": DO,
+                       "ce": CE,
+                       "tds": TDS,
+                       "s": S
+                   }
+               )
+        )
 
         ## Almacenamiento en BD
 
