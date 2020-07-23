@@ -2,40 +2,64 @@ import paho.mqtt.client as mqtt # Import the MQTT library
 
 import time # The time library is useful for delays
 
- 
+from  Main import *
 
 # Our "on message" event
 
-def messageFunction (client, userdata, message):
+def on_message (client, userdata, msg):
 
     topic = str(message.topic)
-
     message = str(message.payload.decode("utf-8"))
-
-
-
     print(topic + message)
+    
+    if msg.topic == "sensor":
+      message = json.loads(str(message.payload.decode("utf-8")))
+      store = msg["position"]
+      if msg ["muestrear"]:
+        client.publish("Status/Sonda", { "muestreo": True})
+        Main.muestreo(10,5)
+
 
  
+def mqtt_thread(con_string, port, timeout):
+    global client
+    try:
+        client = mqtt.Client("id_{}".format(database.drone_id))
+        client.on_connect = on_connect
+        client.subscribe("sensores")
+        client.on_message = on_message
+        # client.username_pw_set("", "")
+        client.on_disconnect = on_disconnect
+        client.connect(con_string, port, timeout)
+        client.loop_forever()
+    except ConnectionRefusedError as e:
+        print("Could not connect to MQTT broker: ", e)
+        logging.error(e)
+        client = None
 
-ourClient = mqtt.Client("Sonda_mqtt") # Create a MQTT client object
+def on_message(_client, user_data, msg):
+    msg_thread = threading.Thread(target=handle_mqtt_message, args=(_client, user_data, msg,))
+    msg_thread.start()
+    msg_thread.join()
 
-ourClient.connect("192.168.20.20", 1883) # Connect to the test MQTT broker
+client = mqtt.Client("Sonda_mqtt") # Create a MQTT client object
+
+client.connect("192.168.20.20", 1883) # Connect to the MQTT broker
 
 #ourClient.subscribe("sonda/raspberry") # Subscribe to the topic 
 
-ourClient.subscribe("sonda/raspberry/ph")
-ourClient.subscribe("sonda/raspberry/temp")
-ourClient.subscribe("sonda/raspberry/do")
-ourClient.subscribe("sonda/raspberry/opr")
-ourClient.subscribe("sonda/raspberry/ce")
-ourClient.subscribe("sonda/raspberry/tds")
-ourClient.subscribe("sonda/raspberry/s")
-ourClient.subscribe("sonda/raspverry/db")
-ourClient.on_message = messageFunction # Attach the messageFunction to subscription
+client.subscribe("sonda/raspberry/ph")
+client.subscribe("sonda/raspberry/temp")
+client.subscribe("sonda/raspberry/do")
+client.subscribe("sonda/raspberry/opr")
+client.subscribe("sonda/raspberry/ce")
+client.subscribe("sonda/raspberry/tds")
+client.subscribe("sonda/raspberry/s")
+client.subscribe("sonda/raspverry/db")
+client.on_message = messageFunction # Attach the messageFunction to subscription
 
 
-ourClient.loop_start() # Start the MQTT client
+client.loop_start() # Start the MQTT client
 
  
 
