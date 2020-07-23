@@ -1,5 +1,5 @@
 import paho.mqtt.client as mqtt # Import the MQTT library
-
+import json
 import time # The time library is useful for delays
 
 from  Main import *
@@ -48,14 +48,14 @@ client.connect("192.168.20.20", 1883) # Connect to the MQTT broker
 
 #ourClient.subscribe("sonda/raspberry") # Subscribe to the topic 
 
-client.subscribe("sonda/raspberry/ph")
-client.subscribe("sonda/raspberry/temp")
-client.subscribe("sonda/raspberry/do")
-client.subscribe("sonda/raspberry/opr")
-client.subscribe("sonda/raspberry/ce")
-client.subscribe("sonda/raspberry/tds")
-client.subscribe("sonda/raspberry/s")
-client.subscribe("sonda/raspverry/db")
+# client.subscribe("sonda/raspberry/ph")
+# client.subscribe("sonda/raspberry/temp")
+# client.subscribe("sonda/raspberry/do")
+# client.subscribe("sonda/raspberry/opr")
+# client.subscribe("sonda/raspberry/ce")
+# client.subscribe("sonda/raspberry/tds")
+# client.subscribe("sonda/raspberry/s")
+# client.subscribe("sonda/raspverry/db")
 client.on_message = messageFunction # Attach the messageFunction to subscription
 
 

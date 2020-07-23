@@ -1,6 +1,6 @@
 import sqlite3
 import time
-import mqttConf
+from mqttConf import *
 from Sensores import sensor_temperatura
 from Sensores import i2c
 from sqlite3 import Error
