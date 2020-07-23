@@ -24,6 +24,10 @@ ourClient.connect("192.168.20.20", 1883) # Connect to the test MQTT broker
 
 #ourClient.subscribe("sonda/raspberry") # Subscribe to the topic 
 
+
+ourClient.subscribe("sonda/raspberry/muestreo")
+
+
 ourClient.subscribe("sonda/raspberry/ph")
 ourClient.subscribe("sonda/raspberry/temp")
 ourClient.subscribe("sonda/raspberry/do")

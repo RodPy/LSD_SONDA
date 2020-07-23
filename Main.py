@@ -56,6 +56,7 @@ def valDate(dateAct,dateAnt,tol):
 
 def muestreo(n,tiempo):
     while n>1:
+        N=n
         temp=sensor_temperatura.read_temp()[0]
         print ("Midiendo Temperatura: ")
         print (temp)
@@ -95,8 +96,9 @@ def muestreo(n,tiempo):
        # sql_insert(conn,lect)
         print("Carga Exitosa, timepo de espera: " + str(tiempo) +" [s]. ")
         time.sleep(tiempo)
+        print("Medicion: "+ str(n) +" de :" + str(N))
         n -=1
 
 if __name__ == '__main__':
-    muestreo():
-muestreo(5,5)
+
+    muestreo(5,5)

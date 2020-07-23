@@ -6,48 +6,9 @@ from Sensores import i2c
 from sqlite3 import Error
 
 
-#tiempo = 10.0
 
-######################################################################################################################
-########  Creacion de Tablas para Base de Datos
-######################################################################################################################
-def sql_connection():
-    try:
-        conn = sqlite3.connect('Sonda_Test.db')  # Nombre de la Base de datos 
-        return conn
-    except Error:
-        print(Error)
-        
-def sql_table(conn):
-    cur =conn.cursor()
-    cur.execute("CREATE TABLE lecturas(N integer PRIMARY KEY AUTOINCREMENT, datatime integer, Tempertatura integer,pH integer,DO integer,CE integer,TDS integer, S integer, OPR integer)")
-    conn.commit()
 
-def sql_insert(conn,lecturas):
-    cur=conn.cursor()
-    #Se crea la table lecturas
-    cur.execute("INSERT INTO lecturas(datatime,Tempertatura,pH,DO,CE,TDS,S,OPR) VALUES(datetime('now','localtime'),?,?,?,?,?,?,?)",lecturas)
-    conn.commit()
-    
-conn= sql_connection()
-##sql_table(conn)
-    
-c = conn.cursor()
 
-######################################################################################################################
-######## Validacion de Datos######## 
-
-def valDate(dateAct,dateAnt,tol):
-    global aux
-    aux= False
-    if (dateAct< (dateAnt + tol) and dateAct> (dateAnt - tol)):
-        aux=False
-        return dateAct
-    else:
-        aux=True 
-        return dateAnt
-
-######################################################################################################################
 
 
 ######################################################################################################################
