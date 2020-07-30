@@ -87,8 +87,7 @@ def handle_mqtt_message(_client, _, msg):
                     if data_received["id"] != database.drone_id and data_received[
                         "radius"] >= database.get_distance_metres(
                         database.home_loc,
-                        aux_lat=float(data_received["position"]["lat"]),
-                        aux_lon=float(data_received["position"]["lon"])
+                        
                     ):
                         logging.log(logging.INFO, "REC:close neigh, answering {}".format(json.dumps(
                             {"id": database.drone_id,

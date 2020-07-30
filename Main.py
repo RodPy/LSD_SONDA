@@ -105,5 +105,5 @@ def muestreo(n,tiempo):
         n -=1
 
 if __name__ == '__main__':
-    muestreo():
+    muestreo()
 muestreo(5,5)
