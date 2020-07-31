@@ -88,7 +88,7 @@ def sql_connection():
         
 def sql_table(conn):
     cur =conn.cursor()
-    cur.execute("CREATE TABLE lecturas(N integer PRIMARY KEY AUTOINCREMENT, datatime integer, lat integer, lon integer, alt integer, Tempertatura integer,pH integer,DO integer,CE integer,TDS integer, S integer, OPR integer)")
+    cur.execute("CREATE TABLE lecturas(N integer PRIMARY KEY AUTOINCREMENT, datatime integer,lat integer,lon integer,alt integer, Tempertatura integer,pH integer,DO integer,CE integer,TDS integer, S integer, OPR integer)")
     conn.commit()
 
 def sql_insert(conn,lecturas):
@@ -98,12 +98,10 @@ def sql_insert(conn,lecturas):
     conn.commit()
     
 conn= sql_connection()
-
 try:
     sql_table(conn)
 except Error:
     pass 
-
 c = conn.cursor()
 
 ######################################################################################################################
@@ -156,7 +154,7 @@ def muestreo(aux_lat,aux_lon,aux_alt,muestras,tiempo):
        
        ## Almacenamiento en BD
 
-        
+        #sql_insert(conn,lect)
         print("Carga Exitosa, timepo de espera: " + str(tiempo) +" [s]. ")
         time.sleep(tiempo)
         
@@ -164,20 +162,16 @@ def muestreo(aux_lat,aux_lon,aux_alt,muestras,tiempo):
         print ("Muestro " + str(muestras-n+1 ) +" de "+ str(muestras))
         auxMuestra=False
         client.publish("sonda/muestro/fin", True)
-        
-        
-        #client.publish("sonda/sensores",json.dumps({"pos": {"lat": 1, "lon": 1, "alt": 1},"temp": temp, "ph": PH,"do": DO,"opr": OPR,"ce": CE,"tds": TDS,"s": S}))
-        client.publish("sonda/sensores",json.dumps({"lat": int(float(LAT)),"lon": int(float(LON)),"alt": int(float(ALT)),"temp": int(temp),"ph": int(float(PH)),"do": int(float(DO)),"opr": int(float(OPR)),"ce": int(float(CE)),"tds": int(float(TDS)), "s": int(float(S)), "cont":cont1}))
-        #client.publish("sonda/sensores",json.dumps({"lat": LAT,"lon": LON,"alt": ALT,"temp": temp,"ph":PH,"do": DO,"opr": OPR,"ce": CE,"tds":TDS, "s": S, "cont":cont1}))
-        sql_insert(conn,lect)
         n -=1
         
-        
+        #client.publish("sonda/sensores",json.dumps({"pos": {"lat": 1, "lon": 1, "alt": 1},"temp": temp, "ph": PH,"do": DO,"opr": OPR,"ce": CE,"tds": TDS,"s": S}))
+        ourClient.publish("sonda/sensores",json.dumps({"lat": int(float(LAT)),"lon": int(float(LON)),"alt": int(float(ALT)),"temp": int(temp),"ph": int(float(PH)),"do": int(float(DO)),"opr": int(float(OPR)),"ce": int(float(CE)),"tds": int(float(TDS)), "s": int(float(S)), "cont":cont1}))
+        #client.publish("sonda/sensores",json.dumps({"lat": LAT,"lon": LON,"alt": ALT,"temp": temp,"ph":PH,"do": DO,"opr": OPR,"ce": CE,"tds":TDS, "s": S, "cont":cont1}))
+    
 try:
     client = mqtt.Client("SONDA_LSD")
     client.on_connect = on_connect
-    #client.on_message = on_message
-    client.on_message = handle_mqtt_message
+    client.on_message = on_message
         # client.username_pw_set("", "")
     client.on_disconnect = on_disconnect
         
@@ -198,3 +192,7 @@ while _running !=True:
 
 while Messagerecieved!=True:
     time.sleep(0.2)
+
+client.publish("sonda/muestreo/inicio",True)
+time.sleep(0.5)
+client.publish("sonda/batimetria/cm",2000)
