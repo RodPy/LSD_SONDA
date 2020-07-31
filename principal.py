@@ -5,7 +5,11 @@ import time                         # The time library is useful for delays
 import argparse
 import json
 import logging
-import kk
+
+import time
+from Sensores import sensor_temperatura
+from Sensores import i2c
+from sqlite3 import Error
 from time import sleep
 
 ###################################################################
@@ -13,9 +17,12 @@ connected       =   False
 Messagerecieved =   False
 auxMuestra      =   False
 _running        =   False
-broker_address  =  "127.0.0.1"
+broker_address  =  "192.168.20.20"
 port            =   1883
+muestras    =   10
+tiempo      =   2
 ###################################################################
+
 
 def on_connect (_client, userdata,flags,rc ):
     global _running
@@ -69,13 +76,78 @@ def on_message(_client, user_data, msg):
     msg_thread = threading.Thread(target=handle_mqtt_message, args=(_client, user_data, msg,))
     msg_thread.start()
   
-def muestreo (aux_lat,aux_lon,muestras,tiempo):
-    print ("[lat long]" +str(aux_lat) + str(aux_lon))
-    print ("HOLAAAA")
-    auxMuestra=False
-    for x in range(10):
-        client.publish("sensores",str(x))
-    client.publish("sonda/muestro/fin", True)
+
+######################################################################################################################
+######## Lectura de Sensores
+######################################################################################################################
+
+def muestreo(aux_lat,aux_lon,muestras,tiempo):
+    n=muestras
+    
+    while n>1:
+        
+        temp=sensor_temperatura.read_temp()[0]
+        print ("Midiendo Temperatura: ")
+        print (temp)
+        reading_time = time.ctime(time.time())
+        print ("Midiendo OPR: ")
+        OPR= i2c.leerSensores("R","OPR")
+        print (OPR)
+        print ("Midiendo DO: ")
+        DO= i2c.leerSensores("R","DO")
+        print (DO)
+        print ("Midiendo PH: ")
+        PH= i2c.leerSensores("R","PH")
+        print (PH)
+        print ("Midiendo CE: ")
+        CEt= i2c.leerSensores("R","CE")
+        print (CEt) 
+        print ("DATOS RECOLECTADOS : ")
+
+        ce= CEt.split(",")
+        CE=ce[0]
+        TDS= ce[1]
+        S= ce[2]
+        
+        SEN= {"Temp":temp,"DO":DO,"OPR":OPR,"PH":PH, "CE":CE,"TDS": TDS, "S": S}
+        print (SEN)
+        lect=(temp,PH,DO,CE,TDS,S,OPR)
+        
+#         client.publish("sensores",
+#                json.dumps(
+#                    {
+#                        "pos": {"lat": 1, "lng": 1},
+#                        "temp": temp,
+#                        "ph": PH,
+#                        "do": DO,
+#                        "ce": CE,
+#                        "tds": TDS,
+#                        "s": S
+#                    }
+#                )
+#         )
+        
+        client.publish("sonda/raspberry/ph", PH)
+        client.publish("sonda/raspberry/temp", temp)
+        client.publish("sonda/raspberry/do", DO)
+        client.publish("sonda/raspberry/opr", OPR)
+        client.publish("sonda/raspberry/ce", CE)
+        client.publish("sonda/raspberry/tds", TDS)
+        client.publish("sonda/raspberry/s", S)
+        ## Almacenamiento en BD
+
+       # sql_insert(conn,lect)
+        print("Carga Exitosa, timepo de espera: " + str(tiempo) +" [s]. ")
+        time.sleep(tiempo)
+        
+        print ("[lat long]" + str(aux_lat) + str(aux_lon))
+        print ("HOLAAAA")
+        auxMuestra=False
+        client.publish("sonda/muestro/fin", True)
+        n -=1
+        
+        #client.publish("sonda/sensores",json.dumps({"pos": {"lat": 1, "lon": 1, "alt": 1},"temp": temp, "ph": PH,"do": DO,"opr": OPR,"ce": CE,"tds": TDS,"s": S}))
+        client.publish("sonda/sensores",json.dumps({"lat": LAT,"lon": LON,"alt": ALT,"temp": temp,"ph": PH,"do": DO,"opr": OPR,"ce": CE,"tds": TDS, "s": S}))
     
 try:
     client = mqtt.Client("SONDA_LSD")
