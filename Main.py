@@ -14,7 +14,7 @@ cont1=0
 ######################################################################################################################
 def sql_connection():
     try:
-        conn = sqlite3.connect('Sonda_off.db')  # Nombre de la Base de datos 
+        conn = sqlite3.connect('Sonda_31Julio.db')  # Nombre de la Base de datos 
         return conn
     except Error:
         print(Error)
@@ -91,13 +91,13 @@ while True:
     LON=0
     ALT=0
     cont1 +=1
-    ourClient.publish("sonda/sensores",json.dumps({"lat": int(float(LAT)),"lon": int(float(LON)),"alt": int(float(ALT)),"temp": int(temp),"ph": int(float(PH)),"do": int(float(DO)),"opr": int(float(OPR)),"ce": int(float(CE)),"tds": int(float(TDS)), "s": int(float(S)), "cont":cont1}))
-    #client.publish("sonda/sensores",json.dumps({"lat": LAT,"lon": LON,"alt": ALT,"temp": temp,"ph":PH,"do": DO,"opr": OPR,"ce": CE,"tds":TDS, "s": S, "cont":cont1}))
+    #ourClient.publish("sonda/sensores",json.dumps({"lat": int(float(LAT)),"lon": int(float(LON)),"alt": int(float(ALT)),"temp": int(temp),"ph": int(float(PH)),"do": int(float(DO)),"opr": int(float(OPR)),"ce": int(float(CE)),"tds": int(float(TDS)), "s": int(float(S)), "cont":cont1}))
+    ourClient.publish("sonda/sensores",json.dumps({"lat": LAT,"lon": LON,"alt": ALT,"temp": temp,"ph":PH,"do": DO,"opr": OPR,"ce": CE,"tds":TDS, "s": S, "cont":cont1}))
 
 
         ## Almacenamiento en BD
 
     sql_insert(conn,lect)
-    print("Carga Exitosa, timepo de espera: " + str(tiempo) +" [s]. "+ "Lectura Continua Nro: " str(cont1))
+    print("Carga Exitosa, timepo de espera: " + str(tiempo) +" [s]. "+ "Lectura Continua Nro: " + str(cont1))
     time.sleep(tiempo)
      

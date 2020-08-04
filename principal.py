@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: cp1252 -*-
 import os
 import threading
 import paho.mqtt.client as mqtt     # Import the MQTT library
@@ -11,6 +13,7 @@ from Sensores import sensor_temperatura
 from Sensores import i2c
 from sqlite3 import Error
 from time import sleep
+import ftplib
 
 ###################################################################
 connected       =   False
@@ -107,6 +110,39 @@ except Error:
 c = conn.cursor()
 
 ######################################################################################################################
+########  FTP
+######################################################################################################################
+
+def CopiarFTP():
+    servidor_id = "192.168.20.20"
+    servidor_user = "sonda"
+    servidor_pass = "660738"
+
+    # Datos del fichero a subir
+    fichero_origen = '/home/pi/Desktop/LSD_SONDA_SENSORES/Sonda_31JUL2020.db' # Ruta al fichero que vamos a subir
+    fichero_destino = 'Sonda_31JUL2020.db' # Nombre que tendrá el fichero en el servidor
+
+    try:
+        conexion = ftplib.FTP(servidor_id)
+        conexion.login(servidor_user,servidor_pass)
+        print("[+] Conexoin extablecida")
+        
+        try:
+            conexion.retrlines("LIST")
+            f = open(fichero_origen, 'rb')
+            conexion.cwd(ftp_raiz)
+            conexion.storbinary('STOR ' + fichero_destino, f)
+            f.close()
+            conexion.quit()
+        except:
+            print "No se ha podido encontrar el fichero " + fichero_origen
+            pass
+
+    except Exception as e:
+        print ("[-]Conexoin no extablecida" + str(e))
+        pass
+
+######################################################################################################################
 ######## Lectura de Sensores
 ######################################################################################################################
 
@@ -170,6 +206,7 @@ def muestreo(aux_lat,aux_lon,aux_alt,muestras,tiempo):
         client.publish("sonda/sensores",json.dumps({"lat": int(float(LAT)),"lon": int(float(LON)),"alt": int(float(ALT)),"temp": int(temp),"ph": int(float(PH)),"do": int(float(DO)),"opr": int(float(OPR)),"ce": int(float(CE)),"tds": int(float(TDS)), "s": int(float(S)), "cont":cont1}))
         #client.publish("sonda/sensores",json.dumps({"lat": LAT,"lon": LON,"alt": ALT,"temp": temp,"ph":PH,"do": DO,"opr": OPR,"ce": CE,"tds":TDS, "s": S, "cont":cont1}))
         sql_insert(conn,lect)
+        CopiarFTP()
         n -=1
         
         
