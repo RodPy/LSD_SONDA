@@ -17,7 +17,7 @@ connected       =   False
 Messagerecieved =   False
 auxMuestra      =   False
 _running        =   False
-broker_address  =  "192.168.20.20"
+broker_address  =  "192.168.0.13"
 port            =   1883
 muestras        =   3
 tiempo          =   2
@@ -81,7 +81,7 @@ def on_message(_client, user_data, msg):
 ######################################################################################################################
 def sql_connection():
     try:
-        conn = sqlite3.connect('Sonda_31JUL2020.db')  # Nombre de la Base de datos 
+        conn = sqlite3.connect('Base_Datos/Sonda_30Setiembre.db')  # Nombre de la Base de datos 
         return conn
     except Error:
         print(Error)
