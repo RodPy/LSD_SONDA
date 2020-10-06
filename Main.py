@@ -7,14 +7,14 @@ from Sensores import i2c
 from sqlite3 import Error
 import json
 
-tiempo = 5.0
+tiempo = 10.0
 cont1=0
 ######################################################################################################################
 ########  Creacion de Tablas para Base de Datos
 ######################################################################################################################
 def sql_connection():
     try:
-        conn = sqlite3.connect('Sonda_31Julio.db')  # Nombre de la Base de datos 
+        conn = sqlite3.connect('Sonda_30Set.db')  # Nombre de la Base de datos 
         return conn
     except Error:
         print(Error)
