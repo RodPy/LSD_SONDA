@@ -119,7 +119,7 @@ if __name__ == '__main__':
 
     device = AtlasI2C()      
     direccciones= device.list_i2c_devices()
-    sensor="PH"
+    sensor="DO"
     add=    dir[sensor]
     device.set_i2c_address(add)
     print(direccciones)
