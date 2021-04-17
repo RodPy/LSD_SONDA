@@ -6,6 +6,7 @@ import fcntl      # used to access I2C parameters like addresses
 import time       # used for sleep delay and timestamps
 import string     # helps parse strings
 
+dir= {"DO":97,"OPR":98,"PH":99, "CE":100}
 
 class AtlasI2C:
     long_timeout = 1.5          # the timeout needed to query readings and calibrations
@@ -86,27 +87,45 @@ class AtlasI2C:
         return i2c_devices
 
 ##dir= {"DO":97,"OPR":98,"PH":99, "CE":100}
-dir= {"DO":97,"OPR":98,"PH":99, "CE":100}
+    dir= {"DO":97,"OPR":98,"PH":99, "CE":100}
 
-prom= 1
+    prom= 1
 
-def leerSensores(mode,sensor):
+    def leerSensores(self,mode,sensor):   
+        add=    dir[sensor]
+        self.set_i2c_address(add)
+      
+        if mode.upper().startswith("R"):
+            mesure=self.query("R")
+            AtlasI2C.long_timeout
+            print("OPERACION CORRECTA "+ sensor +" LEIDO.")
+            return mesure
+        
+        else:
+            self.query(mode)
+            print("OPERACION CORRECTA "+ mode +" EJECUTADO.")
+            
+
+    def apagarSensor(self,sensor):
+      
+        add=    dir[sensor]
+        self.set_i2c_address(add)
+        self.query("SLEEP")
+        print("OPERACION CORRECTA "+ sensor +" EN REPOSO.")
     
-    device = AtlasI2C()      
-    add=    dir[sensor]
-    device.set_i2c_address(add)
-    mesure=0
-    if mode.upper().startswith("R"):
-        for x in range(0, prom):
-            try:
-                mesure=device.query("R")
-              ## print(device.query("R"))
-                AtlasI2C.long_timeout
-                print("OPERACION CORRECTA")
-            except KeyboardInterrupt:
-                print("stopped")
-        ##mesure=mesure/prom
-    return mesure
 
 if __name__ == '__main__':
-    leerSensores()
+    dir= {"DO":97,"OPR":98,"PH":99, "CE":100}
+
+    device = AtlasI2C()      
+    direccciones= device.list_i2c_devices()
+    sensor="DO"
+    add=    dir[sensor]
+    device.set_i2c_address(add)
+    print(direccciones)
+    pp=device.query("R")
+    print(str(pp))
+#     device.apagarSensor("CE")
+#     device.apagarSensor("PH")
+#     device.apagarSensor("OPR")
+#     device.apagarSensor("DO")

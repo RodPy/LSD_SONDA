@@ -8,4 +8,5 @@ sudo pip3 install paho-mqtt
 sudo apt-get install sqlite3
 sudo apt-get install -y i2c-tools
 sudo apt-get install openvpn
+sudo systemctl enable nodered.service 
 
